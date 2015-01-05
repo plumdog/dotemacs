@@ -28,6 +28,9 @@
 ;; Load jinja2-mode for templates
 (load "~/.emacs.d/jinja2-mode/jinja2-mode.el" nil t)
 
+;; Load web-mode for general templates
+(load "~/.emacs.d/web-mode.el" nil t)
+
 ;; Load Quack for Racket
 (load "~/.emacs.d/quack.el" nil t)
 (custom-set-variables
