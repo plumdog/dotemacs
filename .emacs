@@ -1,4 +1,44 @@
+;; el-get setup
+
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+;;(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;;(remove-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
+(el-get 'sync)
+
+;; el-get done
+
+;; package things
+(require 'package)
+;; my packages
+(setq package-list '(auctex git-gutter))
+(add-to-list 'package-archives
+    '("marmalade" .
+      "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+    '("melpa" .
+      "http://melpa.org/packages/"))
+(package-initialize)
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+;;;;
+
 (setq stack-trace-on-error t)
+(setq-default indent-tabs-mode nil)
 
 (setq TeX-PDF-mode t)
 
@@ -28,48 +68,72 @@
 ;; Load jinja2-mode for templates
 (load "~/.emacs.d/jinja2-mode/jinja2-mode.el" nil t)
 
+;; Load jedi
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
 ;; Load web-mode for general templates
 (load "~/.emacs.d/web-mode.el" nil t)
 
+;; Use django in web mode
+(setq web-mode-engines-alist
+	  '(("django" . "\\.html\\'")))
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+
+(defun close-element-and-indent ()
+  (interactive)
+  (web-mode-element-close)
+  (indent-for-tab-command))
+
+(defun my-webmode-hook ()
+  (local-set-key (kbd "C-c /") 'close-element-and-indent)
+  (local-set-key (kbd "C-c b") 'web-mode-block-close)
+  (setq web-mode-code-indent-offset 4)
+  (setq web-mode-script-padding 4)
+  (setq-default intdent-tabs-mode nil))
+(add-hook 'web-mode-hook 'my-webmode-hook)
+
 ;; Load Quack for Racket
 (load "~/.emacs.d/quack.el" nil t)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ecb-options-version "2.40")
- '(ergoemacs-mode-used "5.8.0")
- '(ergoemacs-theme nil)
+
+ '(server-done-hook
+   (quote
+    ((lambda nil
+       (kill-buffer nil))
+     delete-frame)))
+ '(server-switch-hook
+   (quote
+    ((lambda nil
+       (let (server-buf)
+         (setq server-buf (current-buffer))
+         (bury-buffer)
+         (switch-to-buffer-other-frame server-buf))))))
+
  '(inhibit-startup-screen t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
-;; Load kivy-mode
-;; (load "~/.emacs.d/kivy-mode.el" nil t)
-
- ;; setup marmalade
-(require 'package)
-(add-to-list 'package-archives 
-    '("marmalade" .
-      "http://marmalade-repo.org/packages/"))
-(package-initialize)
-
- ;; make some changes for dvorak
- ;; (keyboard-translate ?\C-t ?\C-x)
- ;; (keyboard-translate ?\C-x ?\C-t)
-
-;; (add-to-list 'load-path "~/.emacs.d/ergoemacs-mode")
-;; (require 'ergoemacs-mode)
-;; (setq ergoemacs-theme nil)
-;; (setq ergoemacs-keyboard-layout "gb-dv")
-;; (setq ergoemacs-variant "lvl3")
-;; (ergoemacs-mode 1)
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
+
+;; enable git-gutter
+(global-git-gutter-mode +1)
+(custom-set-variables
+ '(git-gutter:handled-backends '(git svn)))
+
+(setq auto-mode-alist
+      (cons '("\\.po\\'\\|\\.po\\." . po-mode) auto-mode-alist))
+(autoload 'po-mode "po-mode" "Major mode for translators to edit PO files" t)
+
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(setq flycheck-flake8rc "setup.cfg")
+
+(add-to-list 'load-path "~/.emacs.d/handlebars-mode/")
+(require 'handlebars-mode)
+(setq handlebars-basic-offset 4)
