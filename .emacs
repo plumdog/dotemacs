@@ -20,7 +20,7 @@
 ;; package things
 (require 'package)
 ;; my packages
-(setq package-list '(auctex git-gutter))
+(setq package-list '(git-gutter))
 (add-to-list 'package-archives
     '("marmalade" .
       "http://marmalade-repo.org/packages/"))
