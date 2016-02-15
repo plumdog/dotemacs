@@ -20,7 +20,7 @@
 ;; package things
 (require 'package)
 ;; my packages
-(setq package-list '(git-gutter))
+(setq package-list '(git-gutter flycheck jedi direx))
 (add-to-list 'package-archives
     '("marmalade" .
       "http://marmalade-repo.org/packages/"))
@@ -137,3 +137,9 @@
 (add-to-list 'load-path "~/.emacs.d/handlebars-mode/")
 (require 'handlebars-mode)
 (setq handlebars-basic-offset 4)
+
+(load "~/.emacs.d/jedi-direx.el" nil t)
+(require 'jedi-direx)
+(eval-after-load "python"
+  '(define-key python-mode-map "\C-cx" 'jedi-direx:pop-to-buffer))
+(add-hook 'jedi-mode-hook 'jedi-direx:setup)
