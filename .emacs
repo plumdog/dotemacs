@@ -102,21 +102,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ecb-options-version "2.40")
-
- '(server-done-hook
-   (quote
-    ((lambda nil
-       (kill-buffer nil))
-     delete-frame)))
- '(server-switch-hook
-   (quote
-    ((lambda nil
-       (let (server-buf)
-         (setq server-buf (current-buffer))
-         (bury-buffer)
-         (switch-to-buffer-other-frame server-buf))))))
-
- '(inhibit-startup-screen t))
+ '(git-gutter:handled-backends (quote (git svn)))
+ '(haskell-mode-hook (quote (turn-on-haskell-indent)))
+ '(inhibit-startup-screen t)
+ '(server-done-hook (quote ((lambda nil (kill-buffer nil)) delete-frame)))
+ '(server-switch-hook (quote ((lambda nil (let (server-buf) (setq server-buf (current-buffer)) (bury-buffer) (switch-to-buffer-other-frame server-buf)))))))
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -124,22 +114,50 @@
 
 ;; enable git-gutter
 (global-git-gutter-mode +1)
-(custom-set-variables
- '(git-gutter:handled-backends '(git svn)))
+
 
 (setq auto-mode-alist
       (cons '("\\.po\\'\\|\\.po\\." . po-mode) auto-mode-alist))
 (autoload 'po-mode "po-mode" "Major mode for translators to edit PO files" t)
 
-(add-hook 'after-init-hook #'global-flycheck-mode)
+;; (add-hook 'after-init-hook #'global-flycheck-mode)
 (setq flycheck-flake8rc "setup.cfg")
 
 (add-to-list 'load-path "~/.emacs.d/handlebars-mode/")
 (require 'handlebars-mode)
 (setq handlebars-basic-offset 4)
 
-(load "~/.emacs.d/jedi-direx.el" nil t)
-(require 'jedi-direx)
-(eval-after-load "python"
-  '(define-key python-mode-map "\C-cx" 'jedi-direx:pop-to-buffer))
-(add-hook 'jedi-mode-hook 'jedi-direx:setup)
+;; (load "~/.emacs.d/jedi-direx.el" nil t)
+;; (require 'jedi-direx)
+;; (eval-after-load "python"
+;;   '(define-key python-mode-map "\C-cx" 'jedi-direx:pop-to-buffer))
+;; (add-hook 'jedi-mode-hook 'jedi-direx:setup)
+;; (ac-flyspell-workaround)
+
+
+(defun find-first-non-ascii-char ()
+  "Find the first non-ascii character from point onwards."
+  (interactive)
+  (let (point)
+    (save-excursion
+      (setq point
+            (catch 'non-ascii
+              (while (not (eobp))
+                (or (eq (char-charset (following-char))
+                        'ascii)
+                    (throw 'non-ascii (point)))
+                (forward-char 1)))))
+    (if point
+        (goto-char point)
+      (message "No non-ascii characters."))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+
+(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
+
+;; (setq mode-require-final-newline nil)
