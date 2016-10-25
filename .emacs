@@ -161,3 +161,7 @@
 (add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
 
 ;; (setq mode-require-final-newline nil)
+
+;; Never use electric indent mode. This means that Ctrl-J indents, but
+;; ENTER does not indent.
+(electric-indent-mode -1)
