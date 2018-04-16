@@ -20,7 +20,7 @@
 ;; package things
 (require 'package)
 ;; my packages
-(setq package-list '(git-gutter flycheck jedi direx))
+(setq package-list '(git-gutter flycheck jedi direx yaml-mode))
 (add-to-list 'package-archives
     '("marmalade" .
       "http://marmalade-repo.org/packages/"))
@@ -72,13 +72,23 @@
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
 
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.j2\\'" . yaml-mode))
+
 ;; Load web-mode for general templates
 (load "~/.emacs.d/web-mode.el" nil t)
 
 ;; Use django in web mode
-(setq web-mode-engines-alist
-	  '(("django" . "\\.html\\'")))
+;; (setq web-mode-engines-alist
+;; 	  '(("django" . "\\.html\\'"))
+;;       '(("jsx" . "\\.jsx\\'"))
+;;       '(("jsx" . "\\.js\\'")))
+
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+
+(setq web-mode-content-types-alist
+  '(("jsx"  . "\\.js[x]?\\'")))
 
 (defun close-element-and-indent ()
   (interactive)
@@ -88,8 +98,9 @@
 (defun my-webmode-hook ()
   (local-set-key (kbd "C-c /") 'close-element-and-indent)
   (local-set-key (kbd "C-c b") 'web-mode-block-close)
-  (setq web-mode-code-indent-offset 4)
-  (setq web-mode-script-padding 4)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-script-padding 2)
+  (setq web-mode-markup-indent-offset 2)
   (setq-default intdent-tabs-mode nil))
 (add-hook 'web-mode-hook 'my-webmode-hook)
 
@@ -103,10 +114,19 @@
  ;; If there is more than one, they won't work right.
  '(ecb-options-version "2.40")
  '(git-gutter:handled-backends (quote (git svn)))
- '(haskell-mode-hook (quote (turn-on-haskell-indent)))
+ '(haskell-mode-hook (quote (turn-on-haskell-indent)) t)
  '(inhibit-startup-screen t)
+ '(package-selected-packages (quote (php-mode direx jedi flycheck git-gutter)))
  '(server-done-hook (quote ((lambda nil (kill-buffer nil)) delete-frame)))
- '(server-switch-hook (quote ((lambda nil (let (server-buf) (setq server-buf (current-buffer)) (bury-buffer) (switch-to-buffer-other-frame server-buf)))))))
+ '(server-switch-hook
+   (quote
+    ((lambda nil
+       (let
+           (server-buf)
+         (setq server-buf
+               (current-buffer))
+         (bury-buffer)
+         (switch-to-buffer-other-frame server-buf)))))))
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -115,6 +135,8 @@
 ;; enable git-gutter
 (global-git-gutter-mode +1)
 
+;; Don't need the menu
+(menu-bar-mode -1)
 
 (setq auto-mode-alist
       (cons '("\\.po\\'\\|\\.po\\." . po-mode) auto-mode-alist))
@@ -165,3 +187,5 @@
 ;; Never use electric indent mode. This means that Ctrl-J indents, but
 ;; ENTER does not indent.
 (electric-indent-mode -1)
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)

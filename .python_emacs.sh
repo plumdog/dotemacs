@@ -5,6 +5,7 @@ sudo rm -rf ropemacs_things
 mkdir ropemacs_things
 cd ropemacs_things
 
+sudo apt-get install python-pip
 sudo pip install -u virtualenv
 
 git clone https://github.com/python-rope/ropemacs.git
