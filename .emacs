@@ -116,7 +116,9 @@
  '(git-gutter:handled-backends (quote (git svn)))
  '(haskell-mode-hook (quote (turn-on-haskell-indent)) t)
  '(inhibit-startup-screen t)
- '(package-selected-packages (quote (php-mode direx jedi flycheck git-gutter)))
+ '(package-selected-packages
+   (quote
+    (markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode)))
  '(server-done-hook (quote ((lambda nil (kill-buffer nil)) delete-frame)))
  '(server-switch-hook
    (quote
