@@ -20,10 +20,10 @@
 ;; package things
 (require 'package)
 ;; my packages
-(setq package-list '(git-gutter flycheck jedi direx yaml-mode))
+(setq package-list '(git-gutter flycheck jedi direx yaml-mode terraform-mode tide csv-mode))
 (add-to-list 'package-archives
     '("marmalade" .
-      "http://marmalade-repo.org/packages/"))
+      "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives
     '("melpa" .
       "http://melpa.org/packages/"))
@@ -46,6 +46,8 @@
 (setq line-number-mode t)
 
 (setq default-tab-width 4)
+
+(setq typescript-indent-level 4)
 
 (setq c-default-style "linux"
           c-basic-offset 4)
@@ -75,6 +77,12 @@
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.j2\\'" . yaml-mode))
 
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+
+(require 'flycheck-gometalinter)
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-gometalinter-setup))
+
 ;; Load web-mode for general templates
 (load "~/.emacs.d/web-mode.el" nil t)
 
@@ -98,9 +106,13 @@
 (defun my-webmode-hook ()
   (local-set-key (kbd "C-c /") 'close-element-and-indent)
   (local-set-key (kbd "C-c b") 'web-mode-block-close)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-script-padding 2)
-  (setq web-mode-markup-indent-offset 2)
+  ;; (setq web-mode-code-indent-offset 4)
+  ;; (setq web-mode-script-padding 4)
+  ;; (setq web-mode-markup-indent-offset 4)
+
+  (setq web-mode-code-indent-offset 4)
+  (setq web-mode-script-padding 4)
+  (setq web-mode-markup-indent-offset 4)
   (setq-default intdent-tabs-mode nil))
 (add-hook 'web-mode-hook 'my-webmode-hook)
 
@@ -118,7 +130,7 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode)))
+    (highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode)))
  '(server-done-hook (quote ((lambda nil (kill-buffer nil)) delete-frame)))
  '(server-switch-hook
    (quote
@@ -189,5 +201,5 @@
 ;; Never use electric indent mode. This means that Ctrl-J indents, but
 ;; ENTER does not indent.
 (electric-indent-mode -1)
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
+;; (put 'downcase-region 'disabled nil)
+;; (put 'upcase-region 'disabled nil)
