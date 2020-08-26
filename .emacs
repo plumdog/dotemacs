@@ -1,26 +1,30 @@
 ;; el-get setup
 
+;; Never use electric indent mode. This means that Ctrl-J indents, but
+;; ENTER does not indent.
+(electric-indent-mode -1)
+
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
-;;(add-hook 'before-save-hook 'delete-trailing-whitespace)
-;;(remove-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(remove-hook 'before-save-hook 'delete-trailing-whitespace)
 
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
-    (goto-char (point-max))
-    (eval-print-last-sexp)))
+;; (unless (require 'el-get nil 'noerror)
+;;   (with-current-buffer
+;;       (url-retrieve-synchronously
+;;        "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+;;     (goto-char (point-max))
+;;     (eval-print-last-sexp)))
 
-(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-(el-get 'sync)
+;; (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
+;; (el-get 'sync)
 
 ;; el-get done
 
 ;; package things
 (require 'package)
 ;; my packages
-(setq package-list '(git-gutter flycheck jedi direx yaml-mode terraform-mode tide csv-mode))
+(setq package-list '(git-gutter flycheck jedi direx yaml-mode terraform-mode tide csv-mode highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode))
 (add-to-list 'package-archives
     '("marmalade" .
       "https://marmalade-repo.org/packages/"))
@@ -35,7 +39,7 @@
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
-;;;;
+
 
 (setq stack-trace-on-error t)
 (setq-default indent-tabs-mode nil)
@@ -125,22 +129,21 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ecb-options-version "2.40")
- '(git-gutter:handled-backends (quote (git svn)))
- '(haskell-mode-hook (quote (turn-on-haskell-indent)) t)
- '(inhibit-startup-screen t)
+ '(git-gutter:handled-backends '(git svn))
+ '(haskell-mode-hook '(turn-on-haskell-indent) t)
+ ;; '(inhibit-startup-screen t)
  '(package-selected-packages
-   (quote
-    (highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode)))
- '(server-done-hook (quote ((lambda nil (kill-buffer nil)) delete-frame)))
- '(server-switch-hook
-   (quote
-    ((lambda nil
-       (let
-           (server-buf)
-         (setq server-buf
-               (current-buffer))
-         (bury-buffer)
-         (switch-to-buffer-other-frame server-buf)))))))
+   '(highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode))
+ '(server-done-hook '((lambda nil (kill-buffer nil)) delete-frame))
+ ;; '(server-switch-hook
+ ;;   '((lambda nil
+ ;;       (let
+ ;;           (server-buf)
+ ;;         (setq server-buf
+ ;;               (current-buffer))
+ ;;         (bury-buffer)
+ ;;         (switch-to-buffer-other-frame server-buf)))))
+ )
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -198,8 +201,7 @@
 
 ;; (setq mode-require-final-newline nil)
 
-;; Never use electric indent mode. This means that Ctrl-J indents, but
-;; ENTER does not indent.
-(electric-indent-mode -1)
+;; (add-hook 'after-change-major-mode-hook (electric-indent-mode -1))
+;; (electric-indent-mode -1)
 ;; (put 'downcase-region 'disabled nil)
 ;; (put 'upcase-region 'disabled nil)
