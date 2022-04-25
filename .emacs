@@ -25,12 +25,12 @@
 (require 'package)
 ;; my packages
 (setq package-list '(git-gutter flycheck jedi direx yaml-mode terraform-mode tide csv-mode highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode))
-(add-to-list 'package-archives
-    '("marmalade" .
-      "https://marmalade-repo.org/packages/"))
+;; (add-to-list 'package-archives
+;;     '("marmalade" .
+;;       "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives
     '("melpa" .
-      "http://melpa.org/packages/"))
+      "https://melpa.org/packages/"))
 (package-initialize)
 
 (unless package-archive-contents
@@ -130,20 +130,30 @@
  ;; If there is more than one, they won't work right.
  '(ecb-options-version "2.40")
  '(git-gutter:handled-backends '(git svn))
- '(haskell-mode-hook '(turn-on-haskell-indent) t)
- ;; '(inhibit-startup-screen t)
+ '(haskell-mode-hook '(turn-on-haskell-indent))
  '(package-selected-packages
-   '(highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode))
- '(server-done-hook '((lambda nil (kill-buffer nil)) delete-frame))
- ;; '(server-switch-hook
- ;;   '((lambda nil
- ;;       (let
- ;;           (server-buf)
- ;;         (setq server-buf
- ;;               (current-buffer))
- ;;         (bury-buffer)
- ;;         (switch-to-buffer-other-frame server-buf)))))
- )
+   '(highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode company))
+ '(server-done-hook '((lambda nil (kill-buffer nil)) delete-frame)))
+
+;; (defun setup-tide-mode ()
+;;   (interactive)
+;;   (tide-setup)
+;;   (flycheck-mode +1)
+;;   (setq flycheck-check-syntax-automatically '(save mode-enabled))
+;;   (eldoc-mode +1)
+;;   (tide-hl-identifier-mode +1)
+;;   ;; company is an optional dependency. You have to
+;;   ;; install it separately via package-install
+;;   ;; `M-x package-install [ret] company`
+;;   (company-mode +1))
+
+;; ;; aligns annotation to the right hand side
+;; (setq company-tooltip-align-annotations t)
+
+;; ;; formats the buffer before saving
+;; ;; (add-hook 'before-save-hook 'tide-format-before-save)
+
+;; (add-hook 'typescript-mode-hook #'setup-tide-mode)
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -203,5 +213,5 @@
 
 ;; (add-hook 'after-change-major-mode-hook (electric-indent-mode -1))
 ;; (electric-indent-mode -1)
-;; (put 'downcase-region 'disabled nil)
 ;; (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
