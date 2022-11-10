@@ -214,4 +214,4 @@
 ;; (add-hook 'after-change-major-mode-hook (electric-indent-mode -1))
 ;; (electric-indent-mode -1)
 ;; (put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
+;; (put 'downcase-region 'disabled nil)
