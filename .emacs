@@ -4,6 +4,19 @@
 ;; ENTER does not indent.
 (electric-indent-mode -1)
 
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -24,7 +37,59 @@
 ;; package things
 (require 'package)
 ;; my packages
-(setq package-list '(git-gutter flycheck jedi direx yaml-mode terraform-mode tide csv-mode highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode))
+(setq package-list '(git-gutter flycheck jedi direx yaml-mode terraform-mode tide csv-mode highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode editorconfig))
+;; (add-to-list 'package-archives
+;;     '("marmalade" .
+;;       "https://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+    '("melpa" .
+      "https://melpa.org/packages/"))
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t)
+(add-hook 'prog-mode-hook 'copilot-mode)
+
+(define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+
+(setq stack-trace-on-error t)
+(setq-default indent-tabs-mode nil)
+
+(setq TeX-PDF-mode t)
+
+(setq column-number-mode t)
+(setq line-number-mode t)
+
+
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(remove-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; (unless (require 'el-get nil 'noerror)
+;;   (with-current-buffer
+;;       (url-retrieve-synchronously
+;;        "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+;;     (goto-char (point-max))
+;;     (eval-print-last-sexp)))
+
+;; (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
+;; (el-get 'sync)
+
+;; el-get done
+
+;; package things
+(require 'package)
+;; my packages
+(setq package-list '(git-gutter flycheck jedi direx yaml-mode terraform-mode tide csv-mode highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode editorconfig))
 ;; (add-to-list 'package-archives
 ;;     '("marmalade" .
 ;;       "https://marmalade-repo.org/packages/"))
@@ -40,6 +105,10 @@
   (unless (package-installed-p package)
     (package-install package)))
 
+(use-package copilot
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t)
+(add-hook 'prog-mode-hook 'copilot-mode)
 
 (setq stack-trace-on-error t)
 (setq-default indent-tabs-mode nil)
@@ -75,13 +144,13 @@
 (load "~/.emacs.d/jinja2-mode/jinja2-mode.el" nil t)
 
 ;; Load jedi
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
+;; (add-hook 'python-mode-hook 'jedi:setup)
+;; (setq jedi:complete-on-dot t)
 
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.j2\\'" . yaml-mode))
 
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 
 (require 'flycheck-gometalinter)
 (eval-after-load 'flycheck
@@ -130,7 +199,7 @@
  ;; If there is more than one, they won't work right.
  '(ecb-options-version "2.40")
  '(git-gutter:handled-backends '(git svn))
- '(haskell-mode-hook '(turn-on-haskell-indent))
+ '(haskell-mode-hook '(turn-on-haskell-indent) t)
  '(package-selected-packages
    '(highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode company))
  '(server-done-hook '((lambda nil (kill-buffer nil)) delete-frame)))
