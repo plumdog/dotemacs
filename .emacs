@@ -1,5 +1,3 @@
-;; el-get setup
-
 ;; Never use electric indent mode. This means that Ctrl-J indents, but
 ;; ENTER does not indent.
 (electric-indent-mode -1)
@@ -22,25 +20,10 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (remove-hook 'before-save-hook 'delete-trailing-whitespace)
 
-;; (unless (require 'el-get nil 'noerror)
-;;   (with-current-buffer
-;;       (url-retrieve-synchronously
-;;        "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
-;;     (goto-char (point-max))
-;;     (eval-print-last-sexp)))
-
-;; (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-;; (el-get 'sync)
-
-;; el-get done
-
 ;; package things
 (require 'package)
 ;; my packages
-(setq package-list '(git-gutter flycheck jedi direx yaml-mode terraform-mode tide csv-mode highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode editorconfig))
-;; (add-to-list 'package-archives
-;;     '("marmalade" .
-;;       "https://marmalade-repo.org/packages/"))
+(setq package-list '(use-package git-gutter flycheck jedi direx yaml-mode terraform-mode tide csv-mode highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode editorconfig))
 (add-to-list 'package-archives
     '("melpa" .
       "https://melpa.org/packages/"))
@@ -68,58 +51,7 @@
 (setq column-number-mode t)
 (setq line-number-mode t)
 
-
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(remove-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; (unless (require 'el-get nil 'noerror)
-;;   (with-current-buffer
-;;       (url-retrieve-synchronously
-;;        "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
-;;     (goto-char (point-max))
-;;     (eval-print-last-sexp)))
-
-;; (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-;; (el-get 'sync)
-
-;; el-get done
-
-;; package things
-(require 'package)
-;; my packages
-(setq package-list '(git-gutter flycheck jedi direx yaml-mode terraform-mode tide csv-mode highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode editorconfig))
-;; (add-to-list 'package-archives
-;;     '("marmalade" .
-;;       "https://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-    '("melpa" .
-      "https://melpa.org/packages/"))
-(package-initialize)
-
-(unless package-archive-contents
-  (package-refresh-contents))
-
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
-
-(use-package copilot
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :ensure t)
-(add-hook 'prog-mode-hook 'copilot-mode)
-
-(setq stack-trace-on-error t)
-(setq-default indent-tabs-mode nil)
-
-(setq TeX-PDF-mode t)
-
-(setq column-number-mode t)
-(setq line-number-mode t)
-
 (setq default-tab-width 4)
-
 (setq typescript-indent-level 4)
 
 (setq c-default-style "linux"
@@ -143,10 +75,6 @@
 ;; Load jinja2-mode for templates
 (load "~/.emacs.d/jinja2-mode/jinja2-mode.el" nil t)
 
-;; Load jedi
-;; (add-hook 'python-mode-hook 'jedi:setup)
-;; (setq jedi:complete-on-dot t)
-
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.j2\\'" . yaml-mode))
 
@@ -158,12 +86,6 @@
 
 ;; Load web-mode for general templates
 (load "~/.emacs.d/web-mode.el" nil t)
-
-;; Use django in web mode
-;; (setq web-mode-engines-alist
-;; 	  '(("django" . "\\.html\\'"))
-;;       '(("jsx" . "\\.jsx\\'"))
-;;       '(("jsx" . "\\.js\\'")))
 
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
@@ -204,26 +126,6 @@
    '(highlight-indentation tide typescript-mode graphql-mode terraform-mode dockerfile-mode flycheck-gometalinter markdown-mode php-mode go-mode yaml-mode direx jedi flycheck git-gutter haskell-mode company))
  '(server-done-hook '((lambda nil (kill-buffer nil)) delete-frame)))
 
-;; (defun setup-tide-mode ()
-;;   (interactive)
-;;   (tide-setup)
-;;   (flycheck-mode +1)
-;;   (setq flycheck-check-syntax-automatically '(save mode-enabled))
-;;   (eldoc-mode +1)
-;;   (tide-hl-identifier-mode +1)
-;;   ;; company is an optional dependency. You have to
-;;   ;; install it separately via package-install
-;;   ;; `M-x package-install [ret] company`
-;;   (company-mode +1))
-
-;; ;; aligns annotation to the right hand side
-;; (setq company-tooltip-align-annotations t)
-
-;; ;; formats the buffer before saving
-;; ;; (add-hook 'before-save-hook 'tide-format-before-save)
-
-;; (add-hook 'typescript-mode-hook #'setup-tide-mode)
-
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
@@ -244,14 +146,6 @@
 (add-to-list 'load-path "~/.emacs.d/handlebars-mode/")
 (require 'handlebars-mode)
 (setq handlebars-basic-offset 4)
-
-;; (load "~/.emacs.d/jedi-direx.el" nil t)
-;; (require 'jedi-direx)
-;; (eval-after-load "python"
-;;   '(define-key python-mode-map "\C-cx" 'jedi-direx:pop-to-buffer))
-;; (add-hook 'jedi-mode-hook 'jedi-direx:setup)
-;; (ac-flyspell-workaround)
-
 
 (defun find-first-non-ascii-char ()
   "Find the first non-ascii character from point onwards."
@@ -275,12 +169,4 @@
  ;; If there is more than one, they won't work right.
  )
 
-
 (add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
-
-;; (setq mode-require-final-newline nil)
-
-;; (add-hook 'after-change-major-mode-hook (electric-indent-mode -1))
-;; (electric-indent-mode -1)
-;; (put 'upcase-region 'disabled nil)
-;; (put 'downcase-region 'disabled nil)
